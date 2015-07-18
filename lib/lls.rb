@@ -1,4 +1,7 @@
+require "grape"
 require "lls/version"
-
-module Lls
-end
+require "lls/endpoints/ping"
+require "lls/endpoints/login"
+require "lls/endpoints/register"
+require "lls/endpoints/stats"
+require "lls/api"
