@@ -2,6 +2,7 @@ module Lls
 
   class User
     attr_reader :username, :password
+    attr_accessor :login_times
 
     def initialize(username, password)
       @username = username

@@ -14,7 +14,16 @@ module Lls
 
         if user = DB.find_user(username)
           if user.password == password
-            {"status": "ok"}
+            user.login_times += 1
+            DB.update_user(user)
+
+            {
+              status: "ok",
+              data: {
+                username: username,
+                login_times: user.login_times
+              }
+            }
           else 
             error!({ message: "invalid password" }, 401)
           end
