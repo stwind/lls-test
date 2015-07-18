@@ -1,7 +1,6 @@
 module Lls
   module Endpoints
     class Login < Grape::API
-      format :json
 
       params do
         requires :username, type: String

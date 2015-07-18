@@ -7,6 +7,9 @@ module Lls
     end
 
     mount Endpoints::Ping
+
+    format :json
+
     mount Endpoints::Login
     mount Endpoints::Register
     mount Endpoints::Stats
