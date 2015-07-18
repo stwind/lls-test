@@ -16,6 +16,7 @@ module Lls
           if user.password == password
             user.login_times += 1
             DB.update_user(user)
+            DB.user_login(user)
 
             {
               status: "ok",

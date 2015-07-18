@@ -1,3 +1,5 @@
+require "set"
+
 module Lls
   class DB
     class << self
@@ -18,15 +20,19 @@ module Lls
         db.update_user(user)
       end
 
+      def user_login(user)
+        db.user_login(user)
+      end
+
       def stats
-        {'users': 10, 'visitors': 20}
+        db.stats
       end
 
     end
 
     def initialize
-      @users = []
-      @active_users = []
+      @users = Set.new
+      @active_users = Set.new
     end
 
     def find_user(username)
@@ -44,6 +50,16 @@ module Lls
       if user = find_user(user0.username)
         user.login_times = user0.login_times
       end
+    end
+
+    def user_login(user)
+      @active_users << user.username
+    end
+
+    def stats
+      {
+        "user": @active_users.size
+      }
     end
 
   end

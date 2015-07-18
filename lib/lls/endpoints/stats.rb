@@ -4,8 +4,6 @@ module Lls
       format :json
 
       get :stats do
-        fuck = cookies[:fuck]
-        logger.info "#{fuck}"
         DB.stats
       end
 
