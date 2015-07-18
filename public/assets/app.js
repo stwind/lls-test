@@ -10,7 +10,7 @@ function showLoginForm(parent) {
   var content = '<form id="loginForm">' +
       '<input type="text" name="username" placeholder="username" />' +
       '<input type="password" name="password" placeholder="password" />' +
-      '<button>signin</button>' +
+      '<button>登录或注册</button>' +
     '</form>';
   parent.html(content);
 }
@@ -20,26 +20,24 @@ function hideLoginForm(parent) {
 }
 
 function showStatusVisitor(parent) {
-  var content = 'welcome visitor';
+  var content = '你好，游客。请登录或注册。';
   parent.html(content);
 }
 
 function showStatusUser(data, parent) {
-  var content = 'welcome back: ' + data.username + 
-    '; This is your ' + data['login_times'] + ' times of login'; 
+  var content = data.username + ' 谢谢你登录了我们网站！你已经登录了 ' + data['login_times'] + ' 次了，';
   parent.html(content);
 }
 
 function showStatusLoginFail(parent) {
-  var content = 'wrong password';
+  var content = '密码错误，请重试。';
   parent.html(content);
 }
 
 
 function showStats(parent) {
   return function (data) {
-    var content = 'num_user：' + data.user;
-    console.log('showing stats', content);
+    var content = '当前用户数：' + data.user;
     parent.html(content);
   };
 }
@@ -89,13 +87,16 @@ $('#loginForm').on('submit', function (e) {
 
   apiLogin(args, function (result) {
     console.log('login success');
+
     hideLoginForm(loginElm);
     apiStats(showStats(infoElm));
     showStatusUser(result.data, statusElm);
   }, function () {
     console.log('login faield, register new');
+
     apiRegister(args, function (result) {
       console.log('register success');
+
       hideLoginForm(loginElm);
       apiStats(showStats(infoElm));
       showStatusUser(result.data, statusElm);
