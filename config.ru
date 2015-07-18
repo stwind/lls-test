@@ -7,8 +7,11 @@ Bundler.require :default, ENV['RACK_ENV']
 
 require "./lib/lls"
 
-run Lls::App.new({
-  :root => File.expand_path('../public', __FILE__),
-  :urls => %w[/],
-  :try => ['.html', 'index.html', '/index.html']
-  })
+use Rack::Static, 
+  :urls => ["/assets"], 
+  :index => "index.html",
+  :root => File.join(File.dirname(__FILE__), "public")
+
+run Rack::URLMap.new(
+  "/api" => Lls::API
+)
