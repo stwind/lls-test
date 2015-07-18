@@ -9,7 +9,18 @@ module Lls
       end
 
       post :login do
-        {"status": "ok"}
+        username = params[:username]
+        password = params[:password]
+
+        if user = DB.find_user(username)
+          if user.password == password
+            {"status": "ok"}
+          else 
+            error!({ message: "invalid password" }, 401)
+          end
+        else 
+          error!({ message: "user not found" }, 404)
+        end
       end
 
     end
