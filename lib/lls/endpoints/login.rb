@@ -9,7 +9,7 @@ module Lls
       end
 
       post :login do
-        {'status': 'ok'}
+        {"status": "ok"}
       end
 
     end
