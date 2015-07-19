@@ -21,7 +21,7 @@ module Lls
 
     def initialize(*options)
       @api = API
-      @eventsource = EventSource.new(DB)
+      @eventsource = EventSource.new()
     end
 
   end

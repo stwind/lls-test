@@ -20,8 +20,20 @@ module Lls
         db.update_user(user)
       end
 
-      def user_login(user)
-        db.user_login(user)
+      def get_online_time(id)
+        db.get_online_time(id)
+      end
+
+      def update_online_time(id, time)
+        db.update_online_time(id, time)
+      end
+
+      def set_online(id, type)
+        db.set_online(id, type)
+      end
+
+      def set_offline(id)
+        db.set_offline(id)
       end
 
       def stats
@@ -32,7 +44,7 @@ module Lls
 
     def initialize
       @users = Set.new
-      @active_users = Set.new
+      @sessions = {}
     end
 
     def find_user(username)
@@ -52,14 +64,48 @@ module Lls
       end
     end
 
-    def user_login(user)
-      @active_users << user.username
+    def get_online_time(id)
+      if s = @sessions[id]
+        s.online_time
+      else
+        0
+      end
+    end
+
+    def update_online_time(id, time)
+      if s = @sessions[id]
+        s.online_time += time
+        s.last_mod = Time.now
+        puts "#{id} online_time: #{s.online_time}"
+      end
+    end
+
+    def set_online(id, type)
+      puts "#{id} online"
+      if s = @sessions[id]
+        s.is_online = true
+        s.last_mod = Time.now
+      else
+        @sessions[id] = Session.new(id, type)
+      end
+    end
+
+    def set_offline(id)
+      puts "#{id} offline"
+      if s = @sessions[id]
+        s.is_online = false
+        s.last_mod = Time.now
+      else
+        @sessions[id] = Session.new(id, type)
+      end
     end
 
     def stats
+      users = @sessions.select { |_, s| s.type == "user" && s.is_online }
+      visitors = @sessions.select { |_, s| s.type == "visitor" && s.is_online }
       {
-        user: 0,
-        visitor: 0
+        user: users.size,
+        visitor: visitors.size
       }
     end
 

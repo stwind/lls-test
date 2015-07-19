@@ -10,7 +10,6 @@ module Lls
           user = DB.add_user(username, password)
           user.login_times += 1
           DB.update_user(user)
-          DB.user_login(user)
           user
         end
       end
@@ -18,9 +17,6 @@ module Lls
       def login(username, password)
         if user = DB.find_user(username)
           if user.password == password
-            user.login_times += 1
-            DB.update_user(user)
-            DB.user_login(user)
             user
           else 
             fail Error::Unauthorized, "wrong password"
@@ -28,6 +24,22 @@ module Lls
         else 
           fail Error::NotFound, "user"
         end
+      end
+
+      def get_online_time(id)
+        DB.get_online_time(id)
+      end
+
+      def update_online_time(id, time)
+        DB.update_online_time(id, time)
+      end
+
+      def set_online(id, type)
+        DB.set_online(id, type)
+      end
+
+      def set_offline(id)
+        DB.set_offline(id)
       end
 
     end

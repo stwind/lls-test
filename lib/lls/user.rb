@@ -16,4 +16,19 @@ module Lls
 
   end
 
+  class Session
+
+    attr_reader :id, :type, :created_at
+    attr_accessor :last_mod, :online_time, :is_online
+
+    def initialize(id, type, is_online = true)
+      @id = id
+      @type = type
+      @is_online = is_online
+      @create_at = Time.now
+      @last_mod = Time.now
+      @online_time = 0
+    end
+  end
+
 end

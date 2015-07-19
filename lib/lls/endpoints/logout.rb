@@ -1,8 +1,8 @@
 module Lls
   module Endpoints
-    class Login < Grape::API
+    class LogOut < Grape::API
 
-      post :login do
+      post :logout do
         begin
           session.delete(:user_id)
           {

@@ -2,8 +2,6 @@ var statsElm = $('#stats');
 var infoElm = $('#info');
 var formElm = $('#form');
 
-updateStats();
-
 apiGetUserInfo(function (result) {
   if (result.id == 0) {
     showInfoVisitor(result);
@@ -11,6 +9,9 @@ apiGetUserInfo(function (result) {
   } else {
     showInfoUser(result);
   }
+
+  connect();
+  updateStats();
 });
 
 function showForm() {
@@ -28,7 +29,7 @@ function hideForm() {
 }
 
 function showInfoVisitor(data) {
-  var content = '你好，陌生人。你没有登录，或者你还没有注册，但是你已经浏览这个页面 0 分钟了。';
+  var content = '你好，陌生人。你没有登录，或者你还没有注册，但是你已经浏览这个页面 '+data['online_time']+' 分钟了。';
   infoElm.html(content);
 }
 
@@ -130,4 +131,21 @@ function activateForm() {
       showInfoLoginFail();
     });
   });
+}
+
+function connect () {
+  var Socket = window.MozWebSocket || window.WebSocket,
+    socket = new Socket('ws://' + location.hostname + ':' + location.port + '/eventsource');
+
+  socket.addEventListener('open', function() {
+    console.log('SOCKET OPEN: ' + socket.protocol);
+  });
+
+  socket.onerror = function(event) {
+    console.log('SOCKET ERROR: ' + event.message);
+  };
+
+  socket.onclose = function(event) {
+    console.log('SOCKET CLOSE: ' + event.code + ', ' + event.reason);
+  };
 }

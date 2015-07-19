@@ -1,46 +1,63 @@
 module Lls
   class EventSource
 
-    def initialize(db)
-      @db = db
-    end
-
     def call(env)
-      if Faye::EventSource.eventsource?(env)
-        es_response(env)
+      if Faye::WebSocket.websocket?(env)
+        ws_response(env)
       else
         [404, {}, []]
       end
     end
 
-    def es_response(env)
-      # request = Rack::Request.new(env)
-
+    def ws_response(env)
+      session = env["rack.session"]
       start_time = Time.now
 
-      es   = Faye::EventSource.new(env)
-      time = es.last_event_id.to_i
+      set_online(session)
 
-      p [:open, es.url, es.last_event_id]
+      ws = Faye::WebSocket.new(env)
 
-      loop = EM.add_periodic_timer(2) do
-        time += 1
-        es.send("Time: #{time}")
-        EM.add_timer(1) do
-          es.send('Update!!', :event => 'update', :id => time) if es
+      ws.onclose = lambda do |event|
+        duration = (Time.now - start_time).to_i
+        update_online_time(session, duration)
+        set_offline(session)
+        ws = nil
+      end
+
+      ws.rack_response
+    end
+
+    def set_online(session)
+      if sid = session[:session_id]
+        user_id = session[:user_id]
+        if user_id != 0
+          App.set_online(user_id, "user")
+        else
+          App.set_online(sid, "visitor")
         end
       end
+    end
 
-      es.send("Welcome!\n\nThis is an EventSource server.")
-
-      es.onclose = lambda do |event|
-        EM.cancel_timer(loop)
-        duration = (Time.now - start_time).to_i
-        p [:close, es.url, duration]
-        es = nil
+    def set_offline(session)
+      if sid = session[:session_id]
+        user_id = session[:user_id]
+        if user_id != 0
+          App.set_offline(user_id)
+        else
+          App.set_offline(sid)
+        end
       end
+    end
 
-      es.rack_response
+    def update_online_time(session, duration)
+      if sid = session[:session_id]
+        user_id = session[:user_id]
+        if user_id != 0
+          App.update_online_time(user_id, duration)
+        else
+          App.update_online_time(sid, duration)
+        end
+      end
     end
 
   end
