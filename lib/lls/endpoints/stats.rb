@@ -2,9 +2,8 @@ module Lls
   module Endpoints
     class Stats < Grape::API
       get :stats do
-        DB.stats
+        lls.get_stats
       end
-
     end
   end
 end

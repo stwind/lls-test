@@ -6,8 +6,8 @@ module Lls
     attr_reader :id, :username, :password
     attr_accessor :login_times, :online_time
 
-    def initialize(username, password)
-      @id = SecureRandom.random_number(100000)
+    def initialize(id, username, password)
+      @id = id
       @username = username
       @password = password
       @login_times = 0

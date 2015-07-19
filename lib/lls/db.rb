@@ -1,56 +1,15 @@
 require "set"
+require "mysql2"
 
 module Lls
   class DB
-    class << self
-
-      def db
-        @instance ||= new
-      end
-
-      def find_user_by_name(username)
-        db.find_user_by_name(username)
-      end
-
-      def find_user_by_id(user_id)
-        db.find_user_by_id(user_id)
-      end
-
-      def load_user_to_session(user)
-        db.load_user_to_session(user)
-      end
-
-      def add_user(username, password)
-        db.add_user(username, password)
-      end
-
-      def update_user(user)
-        db.update_user(user)
-      end
-
-      def get_online_time(id)
-        db.get_online_time(id)
-      end
-
-      def update_online_time(id, time)
-        db.update_online_time(id, time)
-      end
-
-      def set_online(id, type)
-        db.set_online(id, type)
-      end
-
-      def set_offline(id)
-        db.set_offline(id)
-      end
-
-      def stats
-        db.stats
-      end
-
-    end
-
-    def initialize
+    def initialize(options)
+      @client = Mysql2::Client.new(:host => options[:host], 
+                                  :username => options[:username],
+                                  :password => options[:password],
+                                  :port => options[:port],
+                                  :database => options[:database],
+                                  :encoding => options[:encoding])
       @users = {}
       @sessions = {}
     end
@@ -69,7 +28,11 @@ module Lls
     end
 
     def add_user(username, password)
-      user = User.new(username, password)
+      # username, password = @client.escape(username), @client.escape(password)
+      # sql = "INSERT INTO users (username, password) VALUES ('#{username}','#{password}')"
+      # @client.query(sql)
+
+      user = User.new(100,username, password)
       @users[user.id] = user
       user
     end
@@ -121,7 +84,7 @@ module Lls
       end
     end
 
-    def stats
+    def get_stats
       users = @sessions.select { |_, s| s.type == "user" && s.is_online }
       visitors = @sessions.select { |_, s| s.type == "visitor" && s.is_online }
       {

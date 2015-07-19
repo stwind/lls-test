@@ -15,14 +15,16 @@ use Rack::Static,
 use Rack::Session::Cookie, :expire_after => 2592000,
                            :secret => "vTB3JNV5wL"
 
-# jwt
-# jwt_exclude = %w[ping login register stats].map { |p| "/api/#{p}" }
-# use Rack::JWT::Auth, :secret => "8etg2Gkp3I", 
-#                      :verify => true, 
-#                      :options => {},
-#                      :exclude => jwt_exclude
-
-app = Lls::App.new
+app = Lls::App.create(
+  mysql: {
+    host: "192.168.33.10",
+    port: 3306,
+    username: "root",
+    password: "foobar",
+    database: "lls",
+    encoding: "utf8"
+  }
+)
 
 run Rack::URLMap.new(
   "/eventsource" => app.eventsource,

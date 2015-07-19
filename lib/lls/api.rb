@@ -1,6 +1,5 @@
 module Lls
   class API < Grape::API
-
     helpers do
       def logger
         API.logger
@@ -11,7 +10,7 @@ module Lls
       end
 
       def lls
-        App
+        Lls::App.instance
       end
 
       def handle_error(ex)
@@ -28,5 +27,6 @@ module Lls
     mount Endpoints::Register
     mount Endpoints::Stats
     mount Endpoints::User
+
   end
 end

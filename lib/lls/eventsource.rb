@@ -1,6 +1,10 @@
 module Lls
   class EventSource
 
+    def initialize(app)
+      @app = app
+    end
+
     def call(env)
       if Faye::WebSocket.websocket?(env)
         ws_response(env)
@@ -31,9 +35,9 @@ module Lls
       if sid = session[:session_id]
         user_id = session[:user_id]
         if user_id != 0
-          App.set_online(user_id, "user")
+          @app.set_online(user_id, "user")
         else
-          App.set_online(sid, "visitor")
+          @app.set_online(sid, "visitor")
         end
       end
     end
@@ -42,9 +46,9 @@ module Lls
       if sid = session[:session_id]
         user_id = session[:user_id]
         if user_id != 0
-          App.set_offline(user_id)
+          @app.set_offline(user_id)
         else
-          App.set_offline(sid)
+          @app.set_offline(sid)
         end
       end
     end
@@ -53,9 +57,9 @@ module Lls
       if sid = session[:session_id]
         user_id = session[:user_id]
         if user_id != 0
-          App.update_online_time(user_id, duration)
+          @app.update_online_time(user_id, duration)
         else
-          App.update_online_time(sid, duration)
+          @app.update_online_time(sid, duration)
         end
       end
     end

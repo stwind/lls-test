@@ -17,11 +17,19 @@ module Lls
 
   class App
 
+    class << self
+      attr_reader :instance
+      def create(options)
+        @instance = new(options)
+      end
+    end
+
     attr_reader :api, :eventsource
 
-    def initialize(*options)
+    def initialize(options)
+      @db = DB.new(options[:mysql])
       @api = API
-      @eventsource = EventSource.new()
+      @eventsource = EventSource.new(self)
     end
 
   end
