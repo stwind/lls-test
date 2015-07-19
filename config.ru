@@ -12,6 +12,13 @@ use Rack::Static,
   :index => "index.html",
   :root => File.join(File.dirname(__FILE__), "public")
 
+use Rack::Session::Cookie, :expire_after => 2592000,
+                           :secret => "vTB3JNV5wL"
+use Rack::JWT::Auth, :secret => "8etg2Gkp3I", 
+                     :verify => true, 
+                     :options => {},
+                     :exclude => ["/api/ping"]
+
 app = Lls::App.new
 
 run Rack::URLMap.new(

@@ -5,6 +5,10 @@ module Lls
       def logger
         API.logger
       end
+
+      def session
+        env["rack.session"]
+      end
     end
 
     mount Endpoints::Ping
@@ -14,5 +18,6 @@ module Lls
     mount Endpoints::Login
     mount Endpoints::Register
     mount Endpoints::Stats
+    mount Endpoints::User
   end
 end

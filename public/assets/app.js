@@ -6,6 +6,15 @@ apiStats(showStats(infoElm));
 showStatusVisitor(statusElm);
 showLoginForm(loginElm);
 
+function ping(done) {
+  $.ajax({
+    url: '/api/ping',
+    statusCode: {
+      200: done
+    }
+  });
+}
+
 function showLoginForm(parent) {
   var content = '<form id="loginForm">' +
       '<input type="text" name="username" placeholder="username" />' +
