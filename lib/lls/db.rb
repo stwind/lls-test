@@ -54,7 +54,6 @@ module Lls
         SET login_times=#{user.login_times},online_time=#{user.online_time} 
         WHERE id=#{user.id}
       )
-      puts sql
       @client.query(sql)
     end
 
