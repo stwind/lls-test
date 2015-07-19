@@ -3,9 +3,6 @@
   sudo: true
   vars_files:
     - vars/{{envn}}/common.yml
-  tasks:
-    - name: debug
-      debug: msg={{hostvars['v02']['inventory_hostname']}}
   tags: ['debug']
 
 - hosts: mysql
@@ -17,11 +14,11 @@
     - ANXS.mysql
   tags: ['mysql']
 
-- hosts: all
+- hosts: lls
   sudo: true
   vars_files:
     - vars/{{envn}}/common.yml
     - vars/{{envn}}/ruby.yml
   roles:
     - geerlingguy.ruby
-  tags: ['ruby']
+  tags: ['lls']

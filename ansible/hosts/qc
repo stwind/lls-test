@@ -1,0 +1,11 @@
+# vi: set ft=config :
+lls.snd ansible_ssh_host=lls
+
+[all:vars]
+envn=qc
+
+[mysql]
+lls.snd
+
+[lls]
+lls.snd
