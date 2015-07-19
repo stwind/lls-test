@@ -31,12 +31,12 @@ function hideForm() {
 }
 
 function showInfoVisitor(data) {
-  var content = '你好，陌生人。你没有登录，或者你还没有注册，但是你已经浏览这个页面 '+data['online_time']+' 分钟了。';
+  var content = '你好，陌生人。你没有登录，或者你还没有注册，但是你已经浏览这个页面 '+data['online_time']+' 秒了。';
   infoElm.html(content);
 }
 
 function showInfoUser(data) {
-  var content = data.username + ' 谢谢你登录了我们网站！你已经登录了 ' + data['login_times'] + ' 次了，总共登录时间是 '+data['online_time']+' 分钟';
+  var content = data.username + ' 谢谢你登录了我们网站！你已经登录了 ' + data['login_times'] + ' 次了，总共登录时间是 '+data['online_time']+' 秒';
   infoElm.html(content);
 }
 
