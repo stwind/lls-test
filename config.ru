@@ -2,6 +2,7 @@ ENV['RACK_ENV'] ||= 'test'
 
 require "rubygems"
 require "bundler"
+require "yaml"
 
 Bundler.require :default, ENV['RACK_ENV']
 
@@ -15,13 +16,15 @@ use Rack::Static,
 use Rack::Session::Cookie, :expire_after => 2592000,
                            :secret => "vTB3JNV5wL"
 
+config = YAML.load_file('./config.yml')
+options = config["mysql"]
 app = Lls::App.create(
   mysql: {
-    host: "192.168.33.10",
-    port: 3306,
-    username: "root",
-    password: "foobar",
-    database: "lls",
+    host: options["host"],
+    port: options["port"],
+    username: options["username"],
+    password: options["password"],
+    database: options["database"],
     encoding: "utf8"
   }
 )

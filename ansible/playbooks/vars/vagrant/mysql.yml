@@ -1,0 +1,9 @@
+---
+mysql_root_db_pass: foobar
+mysql_databases:
+  - name: lls
+mysql_users:
+  - name: root
+    pass: "foobar"
+    priv: "*.*:ALL"
+    host: "%"

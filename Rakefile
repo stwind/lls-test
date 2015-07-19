@@ -17,6 +17,7 @@ task :setup do
                                :database => options["database"],
                                :encoding => "utf8")
   @client.query(schema)
+  puts "done"
 end
 
 task :default => :spec
