@@ -12,6 +12,9 @@ use Rack::Static,
   :index => "index.html",
   :root => File.join(File.dirname(__FILE__), "public")
 
+app = Lls::App.new
+
 run Rack::URLMap.new(
-  "/api" => Lls::API
+  "/eventsource" => app.eventsource,
+  "/api" => app.api
 )

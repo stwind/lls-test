@@ -4,6 +4,7 @@ gemspec
 
 gem 'puma'
 gem 'grape'
+gem 'faye-websocket'
 gem 'mysql2'
 
 group :development do

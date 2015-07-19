@@ -1,5 +1,6 @@
 module Lls
   class API < Grape::API
+
     helpers do
       def logger
         API.logger

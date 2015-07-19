@@ -10,7 +10,7 @@ guard :bundler do
   files.each { |file| watch(helper.real_path(file)) }
 end
 
-guard 'rack', cmd: 'puma' do
+guard 'rack', server: 'puma' do
   watch('Gemfile.lock')
   watch(%r{lib/.*})
 end
