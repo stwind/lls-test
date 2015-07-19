@@ -1,0 +1,21 @@
+---
+- name: install necessary packages
+  apt: pkg={{item}} state=present
+  with_items:
+  - git
+  - build-essential
+  - libmysqlclient-dev
+
+- name: clone repo to local
+  git: repo={{lls_repo}} dest=/opt/lls version=master force=yes
+
+- name: install gems
+  command: bundle install
+    creates=/opt/lls/Gemfile.lock
+    chdir=/opt/lls
+
+- name: ensure config files
+  template: src={{item}} dest=/opt/lls/{{item}}
+  with_items:
+  - config.rb
+  - config.yml

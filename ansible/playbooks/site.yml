@@ -19,6 +19,8 @@
   vars_files:
     - vars/{{envn}}/common.yml
     - vars/{{envn}}/ruby.yml
+    - vars/{{envn}}/lls.yml
   roles:
     - geerlingguy.ruby
+    - lls.app
   tags: ['lls']
