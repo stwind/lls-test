@@ -11,8 +11,9 @@ apiGetUserInfo(function (result) {
     showInfoUser(result);
   }
 
-  connect();
-  updateStats();
+  connect(function () {
+    updateStats();
+  });
 });
 
 function showForm() {
@@ -104,9 +105,10 @@ function activateForm() {
 
   function loginOrRegSuccess (data) {
     hideForm();
-    connect();
-    updateStats();
-    showInfoUser(data);
+    connect(function () {
+      updateStats();
+      showInfoUser(data);
+    });
   }
 
   $('#loginForm').on('submit', function (e) {
@@ -135,7 +137,7 @@ function activateForm() {
   });
 }
 
-function connect () {
+function connect (done) {
   if (socket) socket.close();
 
   var Socket = window.MozWebSocket || window.WebSocket;
@@ -143,6 +145,7 @@ function connect () {
 
   socket.addEventListener('open', function() {
     console.log('SOCKET OPEN: ' + socket.protocol);
+    done();
   });
 
   socket.onerror = function(event) {
