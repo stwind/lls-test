@@ -1,6 +1,7 @@
 var statsElm = $('#stats');
 var infoElm = $('#info');
 var formElm = $('#form');
+var socket;
 
 apiGetUserInfo(function (result) {
   if (result.id == 0) {
@@ -103,6 +104,7 @@ function activateForm() {
 
   function loginOrRegSuccess (data) {
     hideForm();
+    connect();
     updateStats();
     showInfoUser(data);
   }
@@ -134,8 +136,10 @@ function activateForm() {
 }
 
 function connect () {
-  var Socket = window.MozWebSocket || window.WebSocket,
-    socket = new Socket('ws://' + location.hostname + ':' + location.port + '/eventsource');
+  if (socket) socket.close();
+
+  var Socket = window.MozWebSocket || window.WebSocket;
+  socket = new Socket('ws://' + location.hostname + ':' + location.port + '/eventsource');
 
   socket.addEventListener('open', function() {
     console.log('SOCKET OPEN: ' + socket.protocol);

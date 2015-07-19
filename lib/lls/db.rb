@@ -8,8 +8,16 @@ module Lls
         @instance ||= new
       end
 
-      def find_user(username)
-        db.find_user(username)
+      def find_user_by_name(username)
+        db.find_user_by_name(username)
+      end
+
+      def find_user_by_id(user_id)
+        db.find_user_by_id(user_id)
+      end
+
+      def load_user_to_session(user)
+        db.load_user_to_session(user)
       end
 
       def add_user(username, password)
@@ -43,23 +51,31 @@ module Lls
     end
 
     def initialize
-      @users = Set.new
+      @users = {}
       @sessions = {}
     end
 
-    def find_user(username)
-      results = @users.select { |u| u.username == username }
+    def find_user_by_name(username)
+      results = @users.select { |_,u| u.username == username }
       results[0]
+    end
+
+    def find_user_by_id(user_id)
+      @users[user_id]
+    end
+
+    def load_user_to_session(user)
+      @sessions[user.id] = Session.new(user.id, "user", online_time: user.online_time)
     end
 
     def add_user(username, password)
       user = User.new(username, password)
-      @users << user
+      @users[user.id] = user
       user
     end
 
     def update_user(user0)
-      if user = find_user(user0.username)
+      if user = find_user_by_name(user0.username)
         user.login_times = user0.login_times
       end
     end
@@ -77,6 +93,11 @@ module Lls
         s.online_time += time
         s.last_mod = Time.now
         puts "#{id} online_time: #{s.online_time}"
+        if s.type == "user"
+          user = find_user_by_id(id)
+          user.online_time += time
+          DB.update_user(user)
+        end
       end
     end
 

@@ -12,8 +12,19 @@ module Lls
             if user_id != 0
               # user
               logger.debug "user: #{user_id}"
-              online_time = lls.get_online_time(user_id)
-              { id: user_id, username: "user", online_time: 100 }
+              if user = lls.get_user_info(user_id)
+                { 
+                  id: user.id, 
+                  username: user.username, 
+                  login_times: user.login_times, 
+                  online_time: user.online_time 
+                }
+              else
+                logger.debug "user #{user_id} not found"
+                online_time = lls.get_online_time(sid)
+                session[:user_id] = 0
+                { id: 0, username: "visitor", online_time: online_time }
+              end
             else
               # know visitor
               logger.debug "know visitor"

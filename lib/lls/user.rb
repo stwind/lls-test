@@ -21,7 +21,7 @@ module Lls
     attr_reader :id, :type, :created_at
     attr_accessor :last_mod, :online_time, :is_online
 
-    def initialize(id, type, is_online = true)
+    def initialize(id, type, is_online = true, online_time = 0)
       @id = id
       @type = type
       @is_online = is_online

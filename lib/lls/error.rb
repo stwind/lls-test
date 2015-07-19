@@ -2,7 +2,7 @@ module Lls
 
   module Error
 
-    class Base < StandardError
+    class LlsError < StandardError
 
       attr_reader :status, :err_msg
 
@@ -12,19 +12,19 @@ module Lls
       end
     end
 
-    class Conflict < Base
+    class Conflict < LlsError
       def initialize(message)
         super(message, 409)
       end
     end
 
-    class Unauthorized < Base
+    class Unauthorized < LlsError
       def initialize(message)
         super(message, 401)
       end
     end
 
-    class NotFound < Base
+    class NotFound < LlsError
       def initialize(resource)
         super("#{resource} not found", 404)
       end

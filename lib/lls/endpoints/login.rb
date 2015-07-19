@@ -23,7 +23,7 @@ module Lls
               online_time: user.online_time
             }
           }
-        rescue => ex
+        rescue Error::LlsError => ex
           handle_error(ex)
         end
 

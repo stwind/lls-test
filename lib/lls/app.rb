@@ -4,7 +4,7 @@ module Lls
     class << self
 
       def register(username, password)
-        if DB.find_user(username)
+        if DB.find_user_by_name(username)
           fail Error::Conflict, "user already exists"
         else
           user = DB.add_user(username, password)
@@ -15,7 +15,7 @@ module Lls
       end
 
       def login(username, password)
-        if user = DB.find_user(username)
+        if user = DB.find_user_by_name(username)
           if user.password == password
             user
           else 
@@ -23,6 +23,13 @@ module Lls
           end
         else 
           fail Error::NotFound, "user"
+        end
+      end
+
+      def get_user_info(user_id)
+        if user = DB.find_user_by_id(user_id)
+          DB.load_user_to_session(user)
+          user
         end
       end
 
