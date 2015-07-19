@@ -4,19 +4,14 @@ var formElm = $('#form');
 
 updateStats();
 
-var token;
-
-if (token = getToken()) {
-  apiGetInfo(token, function (result) {
-  });
-} else {
-  showInfoVisitor();
-  showForm();
-}
-
-function getToken () {
-  Cookies.get('token');
-}
+apiGetUserInfo(function (result) {
+  if (result.id == 0) {
+    showInfoVisitor(result);
+    showForm();
+  } else {
+    showInfoUser(result);
+  }
+});
 
 function showForm() {
   var content = '<form id="loginForm">' +
@@ -38,7 +33,7 @@ function showInfoVisitor(data) {
 }
 
 function showInfoUser(data) {
-  var content = data.username + ' 谢谢你登录了我们网站！你已经登录了 ' + data['login_times'] + ' 次了，';
+  var content = data.username + ' 谢谢你登录了我们网站！你已经登录了 ' + data['login_times'] + ' 次了，总共登录时间是 '+data['online_time']+' 分钟';
   infoElm.html(content);
 }
 
@@ -93,7 +88,24 @@ function apiLogin(args, success, notfound, fail) {
   });
 }
 
+function apiGetUserInfo(success) {
+  $.ajax({
+    url: '/api/user/me',
+    method: 'GET',
+    statusCode: {
+      200: success
+    }
+  });
+}
+
 function activateForm() {
+
+  function loginOrRegSuccess (data) {
+    hideForm();
+    updateStats();
+    showInfoUser(data);
+  }
+
   $('#loginForm').on('submit', function (e) {
     e.preventDefault();
 
@@ -104,22 +116,18 @@ function activateForm() {
 
     apiLogin(args, function (result) {
       console.log('login success');
-
-      hideLoginForm(loginElm);
-      apiStats(showStats(infoElm));
-      showStatusUser(result.data, statusElm);
+      loginOrRegSuccess(result.data);
     }, function () {
       console.log('login faield, register new');
 
       apiRegister(args, function (result) {
         console.log('register success');
-
-        hideLoginForm(loginElm);
-        apiStats(showStats(infoElm));
-        showStatusUser(result.data, statusElm);
+        loginOrRegSuccess(result.data);
       })
     }, function () {
-      showStatusLoginFail(statusElm);
+      $('#loginForm').find('input[name="username"]').val('');
+      $('#loginForm').find('input[name="password"]').val('');
+      showInfoLoginFail();
     });
   });
 }

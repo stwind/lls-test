@@ -1,3 +1,5 @@
+require "securerandom"
+
 module Lls
 
   class User
@@ -5,7 +7,7 @@ module Lls
     attr_accessor :login_times, :online_time
 
     def initialize(username, password)
-      @id = 0
+      @id = SecureRandom.random_number(100000)
       @username = username
       @password = password
       @login_times = 0

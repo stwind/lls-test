@@ -12,7 +12,7 @@ module Lls
 
         begin
           user = lls.register(username, password)
-
+          session[:user_id] = user.id
           {
             status: "ok",
             data: {

@@ -7,10 +7,10 @@ module Lls
 
         get :me do
           user_id = session[:user_id]
-          if user_id == 0
+          if !user_id || user_id == 0
             { id: 0, username: "visitor", online_time: 0 }
           else
-            DB.find_user(user_id)
+            { id: user_id, username: "user", online_time: 100 }
           end
         end
 

@@ -13,6 +13,7 @@ module Lls
 
         begin
           user = lls.login(username, password)
+          session[:user_id] = user.id
           {
             status: "ok",
             data: {
