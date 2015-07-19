@@ -15,6 +15,8 @@ module Lls
     def login(username, password)
       if user = @db.find_user_by_name(username)
         if user.password == hash_pw(password)
+          user.login_times += 1
+          @db.update_user(user)
           user
         else 
           fail Error::Unauthorized, "wrong password"
