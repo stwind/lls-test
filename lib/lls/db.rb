@@ -10,17 +10,29 @@ module Lls
                                   :port => options[:port],
                                   :database => options[:database],
                                   :encoding => options[:encoding])
-      @users = {}
       @sessions = {}
     end
 
     def find_user_by_name(username)
-      results = @users.select { |_,u| u.username == username }
-      results[0]
+      sql = %Q(
+        SELECT id,username,password,login_times,online_time
+        FROM users WHERE username='#{username}'
+      )
+      results = @client.query(sql)
+      if results.size > 0
+        row_to_user(results.first)
+      end
     end
 
     def find_user_by_id(user_id)
-      @users[user_id]
+      sql = %Q(
+        SELECT id,username,password,login_times,online_time
+        FROM users WHERE id=#{user_id}
+      )
+      results = @client.query(sql)
+      if results.size > 0
+        row_to_user(results.first)
+      end
     end
 
     def load_user_to_session(user)
@@ -28,19 +40,22 @@ module Lls
     end
 
     def add_user(username, password)
-      # username, password = @client.escape(username), @client.escape(password)
-      # sql = "INSERT INTO users (username, password) VALUES ('#{username}','#{password}')"
-      # @client.query(sql)
+      username, password = @client.escape(username), @client.escape(password)
+      sql = "INSERT INTO users (username, password) VALUES ('#{username}','#{password}')"
+      @client.query(sql)
 
-      user = User.new(100,username, password)
-      @users[user.id] = user
+      user = User.new(@client.last_id, username, password)
       user
     end
 
-    def update_user(user0)
-      if user = find_user_by_name(user0.username)
-        user.login_times = user0.login_times
-      end
+    def update_user(user)
+      sql = %Q(
+        UPDATE users 
+        SET login_times=#{user.login_times},online_time=#{user.online_time} 
+        WHERE id=#{user.id}
+      )
+      puts sql
+      @client.query(sql)
     end
 
     def get_online_time(id)
@@ -59,7 +74,7 @@ module Lls
         if s.type == "user"
           user = find_user_by_id(id)
           user.online_time += time
-          DB.update_user(user)
+          update_user(user)
         end
       end
     end
@@ -91,6 +106,12 @@ module Lls
         user: users.size,
         visitor: visitors.size
       }
+    end
+
+    private 
+
+    def row_to_user(row)
+      User.new(row["id"], row["username"], row["password"], row["login_times"], row["online_time"])
     end
 
   end

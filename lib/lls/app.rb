@@ -25,7 +25,7 @@ module Lls
     end
 
     def get_stats
-      @db.getStats
+      @db.get_stats
     end
 
     def get_user_info(user_id)

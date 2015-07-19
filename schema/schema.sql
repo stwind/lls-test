@@ -5,5 +5,7 @@ CREATE TABLE users (
     `login_times` int NOT NULL DEFAULT 0,
     `online_time` int NOT NULL DEFAULT 0,
     `creatd_at` datetime,
-    `last_mod` datetime
+    `last_mod` datetime,
+    INDEX `idx_users_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

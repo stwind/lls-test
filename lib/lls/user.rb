@@ -6,12 +6,12 @@ module Lls
     attr_reader :id, :username, :password
     attr_accessor :login_times, :online_time
 
-    def initialize(id, username, password)
+    def initialize(id, username, password, login_times, online_time)
       @id = id
       @username = username
       @password = password
-      @login_times = 0
-      @online_time = 0
+      @login_times = login_times
+      @online_time = online_time
     end
 
   end
