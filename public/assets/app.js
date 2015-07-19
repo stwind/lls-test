@@ -9,6 +9,7 @@ apiGetUserInfo(function (result) {
     showForm();
   } else {
     showInfoUser(result);
+    showLogout();
   }
 
   connect(function () {
@@ -56,6 +57,12 @@ function showStats(data) {
   statsElm.html(content);
 }
 
+function showLogout() {
+  var content = '<button id="logout">退出</button>';
+  formElm.html(content);
+  activateLogout();
+}
+
 function apiGetStats(done) {
   $.ajax({
     url: '/api/stats',
@@ -91,12 +98,20 @@ function apiLogin(args, success, notfound, fail) {
   });
 }
 
+function apiLogout(success) {
+  $.ajax({
+    url: '/api/logout',
+    method: 'POST',
+    complete: success
+  });
+}
+
 function apiGetUserInfo(success) {
   $.ajax({
     url: '/api/user/me',
     method: 'GET',
     statusCode: {
-      200: success
+      200: success,
     }
   });
 }
@@ -104,10 +119,10 @@ function apiGetUserInfo(success) {
 function activateForm() {
 
   function loginOrRegSuccess (data) {
-    hideForm();
     connect(function () {
       updateStats();
       showInfoUser(data);
+      showLogout();
     });
   }
 
@@ -133,6 +148,20 @@ function activateForm() {
       $('#loginForm').find('input[name="username"]').val('');
       $('#loginForm').find('input[name="password"]').val('');
       showInfoLoginFail();
+    });
+  });
+}
+
+function activateLogout () {
+  $('#logout').on('click', function () {
+    apiLogout(function () {
+      apiGetUserInfo(function (result) {
+        showInfoVisitor(result);
+        showForm();
+        connect(function () {
+          updateStats();
+        });
+      });
     });
   });
 }

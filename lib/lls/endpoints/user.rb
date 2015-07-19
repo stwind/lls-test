@@ -9,7 +9,7 @@ module Lls
           if sid = session[:session_id]
             # user or known visitor
             user_id = session[:user_id]
-            if user_id != 0
+            if user_id && user_id != 0
               # user
               logger.debug "user: #{user_id}"
               if user = lls.get_user_info(user_id)
@@ -26,7 +26,7 @@ module Lls
                 { id: 0, username: "visitor", online_time: online_time }
               end
             else
-              # know visitor
+              # known visitor
               logger.debug "know visitor"
               online_time = lls.get_online_time(sid)
               session[:user_id] = 0

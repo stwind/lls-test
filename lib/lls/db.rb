@@ -29,6 +29,7 @@ module Lls
         SELECT id,username,password,login_times,online_time
         FROM users WHERE id=#{user_id}
       )
+      puts sql
       results = @client.query(sql)
       if results.size > 0
         row_to_user(results.first)
