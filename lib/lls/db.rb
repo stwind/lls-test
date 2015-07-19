@@ -58,7 +58,8 @@ module Lls
 
     def stats
       {
-        "user": @active_users.size
+        user: 0,
+        visitor: 0
       }
     end
 
