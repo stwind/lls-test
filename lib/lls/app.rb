@@ -15,6 +15,21 @@ module Lls
         end
       end
 
+      def login(username, password)
+        if user = DB.find_user(username)
+          if user.password == password
+            user.login_times += 1
+            DB.update_user(user)
+            DB.user_login(user)
+            user
+          else 
+            fail Error::Unauthorized, "wrong password"
+          end
+        else 
+          fail Error::NotFound, "user"
+        end
+      end
+
     end
 
   end

@@ -11,25 +11,21 @@ module Lls
         username = params[:username]
         password = params[:password]
 
-        if user = DB.find_user(username)
-          if user.password == password
-            user.login_times += 1
-            DB.update_user(user)
-            DB.user_login(user)
-
-            {
-              status: "ok",
-              data: {
-                username: username,
-                login_times: user.login_times
-              }
+        begin
+          user = lls.login(username, password)
+          {
+            status: "ok",
+            data: {
+              id: user.id,
+              username: user.username,
+              login_times: user.login_times,
+              online_time: user.online_time
             }
-          else 
-            error!({ message: "invalid password" }, 401)
-          end
-        else 
-          error!({ message: "user not found" }, 404)
+          }
+        rescue => ex
+          handle_error(ex)
         end
+
       end
 
     end

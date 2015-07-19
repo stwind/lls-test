@@ -18,6 +18,18 @@ module Lls
       end
     end
 
+    class Unauthorized < Base
+      def initialize(message)
+        super(message, 401)
+      end
+    end
+
+    class NotFound < Base
+      def initialize(resource)
+        super("#{resource} not found", 404)
+      end
+    end
+
   end
 
 end
