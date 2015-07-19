@@ -9,6 +9,8 @@ require "lls/api"
 require "lls/eventsource"
 require "lls/db"
 require "lls/user"
+require "lls/app"
+require "lls/error"
 
 module Lls
 

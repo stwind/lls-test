@@ -14,10 +14,13 @@ use Rack::Static,
 
 use Rack::Session::Cookie, :expire_after => 2592000,
                            :secret => "vTB3JNV5wL"
-use Rack::JWT::Auth, :secret => "8etg2Gkp3I", 
-                     :verify => true, 
-                     :options => {},
-                     :exclude => ["/api/ping"]
+
+# jwt
+# jwt_exclude = %w[ping login register stats].map { |p| "/api/#{p}" }
+# use Rack::JWT::Auth, :secret => "8etg2Gkp3I", 
+#                      :verify => true, 
+#                      :options => {},
+#                      :exclude => jwt_exclude
 
 app = Lls::App.new
 

@@ -9,6 +9,14 @@ module Lls
       def session
         env["rack.session"]
       end
+
+      def lls
+        App
+      end
+
+      def handle_error(ex)
+        error!({ message: ex.err_msg }, ex.status)
+      end
     end
 
     mount Endpoints::Ping

@@ -10,20 +10,20 @@ module Lls
         username = params[:username]
         password = params[:password]
 
-        if DB.find_user(username)
-          error!({ message: "user already exists" }, 409)
-        else
-          user = DB.add_user(username, password)
-          user.login_times += 1
-          DB.update_user(user)
-          DB.user_login(user)
+        begin
+          user = lls.register(username, password)
+
           {
             status: "ok",
             data: {
+              id: user.id,
               username: user.username,
-              login_times: user.login_times
+              login_times: user.login_times,
+              online_time: user.online_time
             }
           }
+        rescue => ex
+          handle_error(ex)
         end
       end
 
