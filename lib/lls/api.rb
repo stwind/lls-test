@@ -24,6 +24,7 @@ module Lls
     format :json
 
     mount Endpoints::Login
+    mount Endpoints::LogOut
     mount Endpoints::Register
     mount Endpoints::Stats
     mount Endpoints::User
